@@ -1,0 +1,191 @@
+[
+    {
+        "id": "5e2f7cbe7e985c6e",
+        "type": "tab",
+        "label": "Temperature Monitoring",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "b3d956610c3c8dd8",
+        "type": "mqtt out",
+        "z": "5e2f7cbe7e985c6e",
+        "name": "",
+        "topic": "sensors/temperature",
+        "qos": "0",
+        "retain": "",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "4c6ce48777b1cdb6",
+        "x": 760,
+        "y": 260,
+        "wires": []
+    },
+    {
+        "id": "2736c2ac9e00eb87",
+        "type": "function",
+        "z": "5e2f7cbe7e985c6e",
+        "name": "Convert Input to Celsius",
+        "func": "//let code = flow.get(\"reading\");\nlet code = msg.payload;\nif (code == undefined) {\n    code = 0;\n}\n\nvar celsius = (25 + ((Number(code) - 512) / 11.3)).toFixed(1);\n\nmsg.payload = (celsius);\n\nflow.set(\"temp\", msg.payload);\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 510,
+        "y": 260,
+        "wires": [
+            [
+                "b3d956610c3c8dd8"
+            ]
+        ]
+    },
+    {
+        "id": "dfaa906c670af821",
+        "type": "ui_gauge",
+        "z": "5e2f7cbe7e985c6e",
+        "name": "Gauge: Temperature",
+        "group": "f5fe14f616c1f253",
+        "order": 0,
+        "width": 0,
+        "height": 0,
+        "gtype": "gage",
+        "title": "",
+        "label": "C",
+        "format": "{{payload}}",
+        "min": 0,
+        "max": "50",
+        "colors": [
+            "#00b500",
+            "#e6e600",
+            "#ca3838"
+        ],
+        "seg1": "",
+        "seg2": "",
+        "diff": false,
+        "className": "",
+        "x": 760,
+        "y": 100,
+        "wires": []
+    },
+    {
+        "id": "87069327fc41d3c9",
+        "type": "mqtt in",
+        "z": "5e2f7cbe7e985c6e",
+        "name": "",
+        "topic": "sensors/temperature",
+        "qos": "0",
+        "datatype": "auto-detect",
+        "broker": "4c6ce48777b1cdb6",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 270,
+        "y": 100,
+        "wires": [
+            [
+                "52644e369c2b4633"
+            ]
+        ]
+    },
+    {
+        "id": "615b863d498b28f0",
+        "type": "arduino in",
+        "z": "5e2f7cbe7e985c6e",
+        "name": "Thermistor (A1)",
+        "pin": "1",
+        "state": "ANALOG",
+        "arduino": "b4543f4.a6ae6c",
+        "x": 280,
+        "y": 260,
+        "wires": [
+            [
+                "2736c2ac9e00eb87"
+            ]
+        ]
+    },
+    {
+        "id": "52644e369c2b4633",
+        "type": "function",
+        "z": "5e2f7cbe7e985c6e",
+        "name": "Get Temp",
+        "func": "msg.payload = flow.get(\"temp\");\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 460,
+        "y": 100,
+        "wires": [
+            [
+                "dfaa906c670af821"
+            ]
+        ]
+    },
+    {
+        "id": "4c6ce48777b1cdb6",
+        "type": "mqtt-broker",
+        "name": "",
+        "broker": "broker.hivemq.com",
+        "port": 1883,
+        "clientid": "",
+        "autoConnect": true,
+        "usetls": false,
+        "protocolVersion": 4,
+        "keepalive": 60,
+        "cleansession": true,
+        "autoUnsubscribe": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthRetain": "false",
+        "birthPayload": "",
+        "birthMsg": {},
+        "closeTopic": "",
+        "closeQos": "0",
+        "closeRetain": "false",
+        "closePayload": "",
+        "closeMsg": {},
+        "willTopic": "",
+        "willQos": "0",
+        "willRetain": "false",
+        "willPayload": "",
+        "willMsg": {},
+        "userProps": "",
+        "sessionExpiry": ""
+    },
+    {
+        "id": "f5fe14f616c1f253",
+        "type": "ui_group",
+        "name": "Processed Temperature",
+        "tab": "a6d3ddc09db42b8b",
+        "order": 1,
+        "disp": true,
+        "width": 6,
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "b4543f4.a6ae6c",
+        "type": "arduino-board",
+        "device": "COM5",
+        "name": "",
+        "samplingInt": "",
+        "log2consol": false
+    },
+    {
+        "id": "a6d3ddc09db42b8b",
+        "type": "ui_tab",
+        "name": "Temperature",
+        "icon": "dashboard",
+        "disabled": false,
+        "hidden": false
+    }
+]
